@@ -1,0 +1,33 @@
+
+W
+'phoenixpedia/tests/Unit/ExampleTest.php,d\1\d18878055d2ed1a589e8045d5361304268786ba4
+I
+phoenixpedia/nginx/conf.d,3\e\3e142926a412cda0cfafa2b3bd11a0114ff88ea5
+V
+&phoenixpedia/nginx/conf.d/laravel.conf,0\4\040ae5dac08bb0afe30ff34077ed1a491500d05f
+G
+phoenixpedia/.gitignore,0\4\0493123c573a1c29ba124f6058932c320970ae11
+I
+phoenixpedia/.env.example,a\c\acfd07bb6697cc568c6926ae99f71428d46eb4e2
+A
+phoenixpedia/.env,d\2\d26f274118e0288340354fb250bd2801e973733c
+^
+.phoenixpedia/nginx/conf.d/laravel.conf.example,6\a\6a3215dfa4c1d14affa789fbf6e06b866e8b2846
+P
+ phoenixpedia/config/database.php,8\4\84ab8f48a83825eb1053ed4cc9a2614c7a92f0e0
+G
+phoenixpedia/Dockerfile,8\2\827c550087b800fff14f453286a5b2fd2cb15acd
+O
+phoenixpedia/docker-compose.yml,9\4\94f4b979a3b071885658ede11498f7117c1a65d2
+O
+phoenixpedia/routes/console.php,0\c\0c2e9febea5bf39f1a469a79f78dd192cb2dfbb5
+K
+phoenixpedia/routes/web.php,7\8\787889c782e3ba7633d147870007d7741f5f45c9
+J
+phoenixpedia/composer.json,f\1\f1f0f60ebb9d658289bd98773ce5cd1a5a07a6b7
+I
+phoenixpedia/package.json,7\2\72a797bf74a255a569e2a5ff197a3ead5b217979
+y
+Iphoenixpedia/database/migrations/0001_01_01_000000_create_users_table.php,0\2\02c2fd14fad8882a77258bc5c8f4e3ddf2d3976a
+U
+%phoenixpedia/.github/workflows/ci.yml,4\c\4c29df116ffc062d9a25cae121b9d53d7b8034b4
