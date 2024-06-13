@@ -26,6 +26,11 @@ Il s'agit d'un projet d'application web utilisant :
   cp .env.example .env
   ```
   <br>
+* **Copier le fichier** `laravel.conf.example` en `laravel.conf` :
+   ```sh
+  cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+  ```
+  <br>
 * **Mettre à jour les variables d'environnement** : Vérifiez que les informations dans le fichier `.env` soient correctes, en particulier celles concernant la base de données.<br><br>
 * **Installer les dépendances PHP avec Composer** : Si Composer n'est pas installé sur votre système, il est disponible depuis le [site officiel](https://getcomposer.org).<br><br>
 * **Générer l'APP_KEY** :
