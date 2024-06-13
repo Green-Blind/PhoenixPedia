@@ -1,66 +1,95 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Projet PhoenixPedia
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Il s'agit d'un projet d'application web utilisant :
+* **PHP** : version `8.3.7`.<br><br>
+* **Laravel** : version `11.9`.<br><br>
+* **Bulma** : version `1.0.1`. <br><br>
+* **Nginx** : version `1.26.0`. <br><br>
+* **MariaDB** : version `latest`. <br><br>
 
-## About Laravel
+## Mise en place de l'environnement de développement
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Prérequis
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* **Installer Docker et Docker Compose** : disponible sur le [site officiel](https://www.docker.com).<br><br>
+* **Cloner le Répertoire du Projet** :
+   ```sh
+  git clone https://github.com/Green-Blind/PhoenixPedia.git
+  cd PhoenixPedia/phoenixpedia
+  ```
+  <br>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Étapes pour Configurer l'Environnement de Développement
 
-## Learning Laravel
+* **Copier le fichier** `.env.example` en `.env` :
+   ```sh
+  cp .env.example .env
+  ```
+  <br>
+* **Mettre à jour les variables d'environnement** : Vérifiez que les informations dans le fichier `.env` soient correctes, en particulier celles concernant la base de données.<br><br>
+* **Installer les dépendances PHP avec Composer** : Si Composer n'est pas installé sur votre système, il est disponible depuis le [site officiel](https://getcomposer.org).<br><br>
+* **Générer l'APP_KEY** :
+   ```sh
+  php artisan key:generate
+  ```
+  <br>
+* **Lancer Docker Compose** : Assurez-vous que Docker est en cours d'exécution, puis utilisez Docker Compose pour démarrer les conteneurs.<br><br>
+   ```sh
+  docker-compose up -d
+  ```
+  <br>
+* **Exécuter les migrations de la base de données** :
+   ```sh
+  docker-compose exec app php artisan migrate
+  ```
+  <br>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Vérification et Résolution des Problèmes
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* **Vérifier l'état des conteneurs** : Assurez-vous que tous les conteneurs sont en cours d'exécution.
+   ```sh
+  docker ps
+  ```
+  <br>
+* **Accéder à l'application** : Ouvrez votre navigateur et accédez à [http://localhost:8081](http://localhost:8081) pour vérifier que l'application Laravel fonctionne correctement.<br><br>
+* **Accéder à phpMyAdmin** : Ouvrez votre navigateur et accédez à [http://localhost:8082](http://localhost:8082) pour accéder à phpMyAdmin et vérifier que la base de données est accessible.<br><br>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Reconstruction des Images
 
-## Laravel Sponsors
+Lorsque vous apportez des **modifications** au `Dockerfile`, au `docker-compose.yml`, aux fichiers sources ou aux configurations de service. Il sera peut-être nécessaire de reconstruire les **images Docker**.
+Cela garantit que les changements sont pris en compte dans les nouvelles instances de **conteneurs Docker**.
+   ```sh
+  docker-compose up -d --build
+  ```
+  <br>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Modification dans les Fichiers de Code
 
-### Premium Partners
+Si vous modifiez uniquement des fichiers comme des vues (dans `resources/views`), des modèles (dans `app/Models`) ou des contrôleurs (dans `app/Http/Controllers`), voici le comportement :
+* **Vues** : Les modifications dans les fichiers de vues sont prises en compte immédiatement lorsqu'elles sont sauvegardées, sans nécessiter de redémarrage des conteneurs Docker.<br><br>
+* **Modèles et Contrôleurs** : Pour les changements dans les fichiers PHP tels que les modèles et les contrôleurs, Laravel détecte automatiquement ces modifications lorsqu'elles sont enregistrées. Par conséquent, vous n'avez pas besoin de redémarrer les conteneurs Docker.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Cache et Optimisation
 
-## Contributing
+Cependant, il y a certains scénarios où Laravel utilise des caches ou des optimisations qui pourraient nécessiter une mise à jour manuelle si les changements n'apparaissent pas immédiatement :
+* **Cache Configuration** : Si vous modifiez des fichiers de configuration (`config/`) ou d'autres fichiers de configuration Laravel, il est recommandé de vider le cache Laravel en utilisant la commande artisan :
+   ```sh
+  docker-compose exec app php artisan config:cache
+  ```
+  <br>  
+* **Autoload Class Mapping** : Si vous ajoutez de nouvelles classes ou des classes dans des répertoires non standard, tu peux devoir régénérer l'autoload :
+   ```sh
+  docker-compose exec app composer dump-autoload
+  ```
+  <br>  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Redémarrage Sélectif
+Si vous effectuez des changements qui ne semblent pas être pris en compte immédiatement (par exemple, des changements dans des configurations spécifiques qui ne sont pas rafraîchies automatiquement), vous pouvez redémarrer sélectivement les services nécessaires. Par exemple :
+   ```sh
+  docker-compose restart app
+  ```
+  <br>  
 
-## Code of Conduct
+Cela redémarre uniquement le service `app` (contenant PHP-FPM dans ce cas), ce qui peut suffire pour appliquer les modifications récentes.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
