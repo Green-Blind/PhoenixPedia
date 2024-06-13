@@ -19,4 +19,4 @@ yarn-error.log
 /.idea
 /.vscode
 .idea/
-/nginx/conf.d/*.conf
+/nginx/conf.d/laravel.conf
