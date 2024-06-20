@@ -4,52 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbc79680-dc2e-4c6b-a334-46b408d83ea5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/PhoenixPedia.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PhoenixPedia.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/2/02c2fd14fad8882a77258bc5c8f4e3ddf2d3976a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/4/040ae5dac08bb0afe30ff34077ed1a491500d05f" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/4/0493123c573a1c29ba124f6058932c320970ae11" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/c/0c2e9febea5bf39f1a469a79f78dd192cb2dfbb5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/e/3e142926a412cda0cfafa2b3bd11a0114ff88ea5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/c/4c29df116ffc062d9a25cae121b9d53d7b8034b4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/a/6a3215dfa4c1d14affa789fbf6e06b866e8b2846" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/2/72a797bf74a255a569e2a5ff197a3ead5b217979" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/8/787889c782e3ba7633d147870007d7741f5f45c9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/2/827c550087b800fff14f453286a5b2fd2cb15acd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/4/84ab8f48a83825eb1053ed4cc9a2614c7a92f0e0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/4/94f4b979a3b071885658ede11498f7117c1a65d2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/c/acfd07bb6697cc568c6926ae99f71428d46eb4e2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/1/d18878055d2ed1a589e8045d5361304268786ba4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/2/d26f274118e0288340354fb250bd2801e973733c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/1/f1f0f60ebb9d658289bd98773ce5cd1a5a07a6b7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/2/02c2fd14fad8882a77258bc5c8f4e3ddf2d3976a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/4/040ae5dac08bb0afe30ff34077ed1a491500d05f" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/4/0493123c573a1c29ba124f6058932c320970ae11" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/c/0c2e9febea5bf39f1a469a79f78dd192cb2dfbb5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/e/3e142926a412cda0cfafa2b3bd11a0114ff88ea5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/c/4c29df116ffc062d9a25cae121b9d53d7b8034b4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/6/a/6a3215dfa4c1d14affa789fbf6e06b866e8b2846" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/2/72a797bf74a255a569e2a5ff197a3ead5b217979" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/8/787889c782e3ba7633d147870007d7741f5f45c9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/2/827c550087b800fff14f453286a5b2fd2cb15acd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/4/84ab8f48a83825eb1053ed4cc9a2614c7a92f0e0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/4/94f4b979a3b071885658ede11498f7117c1a65d2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/a/c/acfd07bb6697cc568c6926ae99f71428d46eb4e2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/1/d18878055d2ed1a589e8045d5361304268786ba4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/2/d26f274118e0288340354fb250bd2801e973733c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/f/1/f1f0f60ebb9d658289bd98773ce5cd1a5a07a6b7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phoenixpedia/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/phoenixpedia/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phoenixpedia/.github/workflows/ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/phoenixpedia/.github/workflows/ci.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phoenixpedia/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/phoenixpedia/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phoenixpedia/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/phoenixpedia/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phoenixpedia/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/phoenixpedia/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phoenixpedia/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/phoenixpedia/docker-compose.yml" afterDir="false" />
-    </list>
+    <list default="true" id="fbc79680-dc2e-4c6b-a334-46b408d83ea5" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -229,6 +184,7 @@
       <workItem from="1718367910290" duration="170000" />
       <workItem from="1718368086841" duration="7323000" />
       <workItem from="1718783851984" duration="9454000" />
+      <workItem from="1718887661549" duration="1809000" />
     </task>
     <servers />
   </component>
