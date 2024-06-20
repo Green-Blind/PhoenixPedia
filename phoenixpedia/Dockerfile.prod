@@ -4,3 +4,13 @@ RUN docker-php-ext-install pdo_mysql
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
+RUN apt-get update && apt-get install -y netcat-openbsd
+
+WORKDIR /var/www
+
+COPY . /var/www
+COPY init.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/init.sh
+
+CMD ["sh", "/usr/local/bin/init.sh"]
