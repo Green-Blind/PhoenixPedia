@@ -1,0 +1,52 @@
+name: Laravel Run Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: mariadb:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: laravel
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: laravel
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install PHP dependencies
+        run: |
+          cp .env.example .env
+          cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+          composer install --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
+          php artisan key:generate
+          php artisan config:cache
+
+      - name: Install npm dependencies
+        run: |
+          npm install
+
+      - name: Set up Docker Compose
+        uses: docker/compose-action@v2
+        with:
+          compose-file: docker-compose.yml
+
+      - name: Run tests inside Docker container
+        run: |
+          docker-compose exec -T app php artisan test

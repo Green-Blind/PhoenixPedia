@@ -1,10 +1,6 @@
 #!/bin/sh
 
-cp .env.example .env
-cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
-composer install
-npm install
-php artisan key:generate
+chown -R www-data:www-data /var/www
 
 # Attendre que la base de données soit prête
 until nc -z -v -w30 db 3306; do
