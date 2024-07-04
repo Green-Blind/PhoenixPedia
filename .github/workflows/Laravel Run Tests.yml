@@ -41,6 +41,18 @@ jobs:
         run: |
           docker-compose up -d
 
-      - name: Run tests inside Docker container
+      - name: Wait for application to be ready
         run: |
-          docker-compose exec -T app php artisan test
+          timeout=300 # Timeout after 5 minutes
+          until curl -sSf http://localhost:8081; do
+            timeout=$(($timeout - 1))
+            if [ $timeout -eq 0 ]; then
+              echo "Application not ready within timeout."
+              exit 1
+            fi
+            echo "Waiting for application to be ready..."
+            sleep 1
+          done
+
+      - name: Run tests inside Docker container
+        run: docker-compose exec -T app php artisan test
