@@ -24,6 +24,8 @@ jobs:
         run: |
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+          ls -a
+          sleep 40
           composer install --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
           php artisan key:generate
           php artisan config:cache
@@ -51,7 +53,7 @@ jobs:
               exit 1
             fi
             echo "Waiting for application to be ready..."
-            sleep 1
+            sleep 40
           done
 
       - name: Run tests inside Docker container
