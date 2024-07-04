@@ -42,10 +42,14 @@ jobs:
         run: |
           npm install
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose -y
+
       - name: Set up Docker Compose
-        uses: docker/compose-action@v2
-        with:
-          compose-file: docker-compose.yml
+        run: |
+          docker-compose up -d
 
       - name: Run tests inside Docker container
         run: |
