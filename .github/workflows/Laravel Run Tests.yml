@@ -12,87 +12,32 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      db:
-        image: mariadb:latest
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: laravel
-          MYSQL_USER: laravel
-          MYSQL_PASSWORD: laravel
+      docker:
+        image: docker:19.03.12
+        options: --privileged
         ports:
           - 3307:3306
-        options: >
-          --health-cmd="mysqladmin ping -h localhost -u laravel -plaravel || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-
-      webserver:
-        image: nginx:1.26.0-alpine
-        ports:
           - 8081:80
-        options: >
-          --health-cmd="curl -f http://localhost || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
+          - 8082:80
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-
-      - name: Install PHP dependencies
+      - name: Set up Docker Compose
         run: |
-          cp .env.example .env
-          cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
-          chmod -R 777 .
-          composer install --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
-          php artisan key:generate
-          php artisan config:cache
+          docker-compose up -d
+          docker-compose ps
 
-      - name: Install npm dependencies
+      - name: Wait for services to be ready
         run: |
-          npm install
+          docker-compose run --rm app sh -c "until nc -z -v -w30 db 3306; do echo 'Waiting for database connection...'; sleep 1; done"
 
-      - name: Wait for MySQL to be ready
-        run: |
-          echo "Waiting for MySQL to be ready..."
-          until docker-compose exec -T db mysqladmin ping -h localhost --silent; do
-            sleep 10
-            echo "Waiting for MySQL to be ready..."
-          done
+      - name: Run Laravel tests
+        run: docker-compose run --rm app php artisan test
 
-      - name: Start PHP-FPM and run migrations
-        run: |
-          docker run -d --name laravel_app --network host -v $(pwd):/var/www -w /var/www php:8.3.7-fpm sh -c "
-            until nc -z -v -w30 localhost 3307; do
-              echo 'Waiting for database connection...'
-              sleep 1
-            done;
-            php artisan migrate --force;
-            php-fpm
-          "
-
-      - name: Check Laravel logs
-        run: docker logs laravel_app
-
-      - name: Wait for application to be ready
-        run: |
-          timeout=300 # Timeout after 5 minutes
-          until curl -sSf http://localhost:8081; do
-            timeout=$(($timeout - 1))
-            if [ $timeout -eq 0 ]; then
-              echo "Application not ready within timeout."
-              exit 1
-            fi
-            echo "Waiting for application to be ready..."
-            sleep 10
-          done
-
-      - name: Run tests inside Docker container
-        run: php artisan test
+      - name: Tear down Docker Compose
+        if: always()
+        run: docker-compose down -v
