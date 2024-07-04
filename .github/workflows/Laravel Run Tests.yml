@@ -16,10 +16,10 @@ jobs:
       mysql:
         image: mariadb:latest
         env:
-          MYSQL_ROOT_PASSWORD: root_password
-          MYSQL_DATABASE: database_name
-          MYSQL_USER: username
-          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: laravel
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: laravel
         ports:
           - 3307:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
