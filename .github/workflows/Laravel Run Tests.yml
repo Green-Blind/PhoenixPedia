@@ -25,6 +25,7 @@ jobs:
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
           pwd
+          ls -l
           ls -a
           ls -a ./nginx/conf.d
           sleep 40
@@ -38,13 +39,13 @@ jobs:
 
       - name: Install Docker Compose
         run: |
-          sudo apt-get update
-          sudo apt-get install docker-compose -y
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
       - name: Set up Docker Compose
         run: |
-          docker-compose up
+          docker-compose up -d
 
       - name: Wait for application to be ready
         run: |
