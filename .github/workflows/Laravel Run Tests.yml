@@ -40,10 +40,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install docker-compose -y
+          docker-compose --version
 
       - name: Set up Docker Compose
         run: |
-          docker-compose up -d
+          docker-compose up
 
       - name: Wait for application to be ready
         run: |
