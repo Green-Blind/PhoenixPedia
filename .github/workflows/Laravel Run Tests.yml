@@ -26,10 +26,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Copy environment files
+        run: |
+          cp .env.example .env
+          cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+
       - name: Set up Docker Compose
         run: |
           docker-compose up -d
           docker-compose ps
+          sleep 40
 
       - name: Wait for services to be ready
         run: |
