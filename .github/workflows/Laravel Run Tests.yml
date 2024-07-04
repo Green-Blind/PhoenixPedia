@@ -24,7 +24,9 @@ jobs:
         run: |
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+          pwd
           ls -a
+          ls -a ./nginx/conf.d
           sleep 40
           composer install --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
           php artisan key:generate
