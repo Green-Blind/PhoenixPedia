@@ -29,6 +29,7 @@ jobs:
           ls -l
           ls -a
           ls -a ./nginx/conf.d
+          cat ./nginx/conf.d/laravel.conf
           sleep 40
           composer install --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
           php artisan key:generate
@@ -47,6 +48,13 @@ jobs:
       - name: Set up Docker Compose
         run: |
           docker-compose up -d
+          docker-compose exec -T app php artisan migrate --force
+
+      - name: Check logs of app container
+        run: docker logs laravel_app
+
+      - name: Check logs of webserver container
+        run: docker logs nginx
 
       - name: Wait for application to be ready
         run: |
