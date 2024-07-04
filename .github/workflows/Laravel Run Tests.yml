@@ -9,41 +9,33 @@ on:
 
 jobs:
   test:
+    name: Run Laravel Tests
     runs-on: ubuntu-latest
 
     services:
-      docker:
-        image: docker:19.03.12
-        options: --privileged
+      mysql:
+        image: mariadb:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: database_name
+          MYSQL_USER: username
+          MYSQL_PASSWORD: password
         ports:
           - 3307:3306
-          - 8081:80
-          - 8082:80
-        volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Copy environment files
-        run: |
-          cp .env.example .env
-          cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
-
       - name: Set up Docker Compose
-        run: |
-          docker-compose up -d
-          docker-compose ps
-          sleep 40
+        run: docker-compose up -d
 
-      - name: Wait for services to be ready
-        run: |
-          docker-compose run --rm app sh -c "until nc -z -v -w30 db 3306; do echo 'Waiting for database connection...'; sleep 1; done"
+      - name: Wait for Laravel app to be ready
+        run: docker-compose exec -T app sh -c 'until nc -z -w30 localhost 9000; do echo "Waiting for Laravel app..."; sleep 5; done'
 
-      - name: Run Laravel tests
-        run: docker-compose run --rm app php artisan test
+      - name: Generate application key
+        run: docker-compose exec -T app php artisan key:generate
 
-      - name: Tear down Docker Compose
-        if: always()
-        run: docker-compose down -v
+      - name: Run tests
+        run: docker-compose exec -T app php artisan test
