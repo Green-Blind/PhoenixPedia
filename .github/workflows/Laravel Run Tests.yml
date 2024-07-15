@@ -36,9 +36,9 @@ jobs:
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           composer --version
           curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-          apt-get install -y nodejs
+          sudo apt-get install -y nodejs
           npm --version
-          apt-get install -y netcat-openbsd
+          sudo apt-get install -y netcat-openbsd
           composer install --no-interaction --no-plugins --no-scripts
           npm i
           php artisan key:generate
