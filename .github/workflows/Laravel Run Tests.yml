@@ -24,10 +24,8 @@ jobs:
         run: |
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
-          sudo chmod -R 777 .
           pwd
-          ls -al
-          composer install --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
+          ls -a
           php artisan key:generate
           php artisan config:cache
 
@@ -51,14 +49,13 @@ jobs:
           docker-compose exec -T app php artisan migrate --force
           docker ps
 
-      - name: Check file permissions
-        run: docker-compose exec -T app ls -l /var/www
-
-      - name: Check logs of app container
-        run: docker logs laravel_app
-
-      - name: Check logs of webserver container
-        run: docker logs nginx
-
       - name: Run tests inside Docker container
         run: docker-compose exec -T app php artisan test
+
+      - name: Collect logs if tests fail
+        if: failure()
+        run: |
+          docker-compose logs app
+          docker-compose logs webserver
+          docker-compose logs db
+          docker-compose logs phpmyadmin
