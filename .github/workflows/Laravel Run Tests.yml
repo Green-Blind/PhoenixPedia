@@ -33,6 +33,7 @@ jobs:
           sudo chmod -R 777 storage bootstrap/cache
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+          cp nginx/conf.d/laravel.conf.example nginx/conf.d/default.conf
 
       - name: Install PHP dependencies
         run: |
@@ -46,6 +47,9 @@ jobs:
           npm install
           php artisan key:generate
           php artisan config:cache
+          sudo chown -R www-data:www-data .
+          sudo chmod -R 777 .
+          sudo chmod -R 777 storage bootstrap/cache
 
       - name: Install Docker Compose
         run: |
