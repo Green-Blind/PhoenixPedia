@@ -28,6 +28,11 @@ jobs:
 
       - name : Copy environment files
         run: |
+          pwd
+          ls -al
+          sudo chown -R www-data:www-data .
+          sudo chmod -R 777 .
+          ls -al
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
 
