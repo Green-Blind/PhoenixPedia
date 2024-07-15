@@ -29,7 +29,8 @@ jobs:
       - name: Copy environment files
         run: |
           sudo chown -R www-data:www-data .
-          sudo chmod -R 775 storage bootstrap/cache
+          sudo chmod -R 777 .
+          sudo chmod -R 777 storage bootstrap/cache
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
 
