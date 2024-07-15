@@ -33,9 +33,9 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
-          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          sudo curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           composer --version
-          curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+          sudo curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
           sudo apt-get install -y nodejs
           npm --version
           sudo apt-get install -y netcat-openbsd
@@ -57,8 +57,7 @@ jobs:
 
       - name: Run tests inside Docker container
         run: |
-          docker-compose exec -T app php artisan test
-          docker-compose exec -T webserver php artisan test
+          sudo docker-compose exec app php artisan test
 
       - name: Collect logs
         run: |
