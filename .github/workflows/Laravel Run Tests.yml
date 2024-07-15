@@ -20,19 +20,16 @@ jobs:
         with:
           php-version: '8.3'
 
-      - name : Update/Upgrade
+      - name: Update/Upgrade
         run: |
           sudo apt-get update
           sudo apt-get install -y
           sudo apt-get upgrade -y
 
-      - name : Copy environment files
+      - name: Copy environment files
         run: |
-          pwd
-          ls -al
           sudo chown -R www-data:www-data .
-          sudo chmod -R 777 .
-          ls -al
+          sudo chmod -R 775 storage bootstrap/cache
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
 
@@ -45,7 +42,7 @@ jobs:
           npm --version
           sudo apt-get install -y netcat-openbsd
           composer install --no-interaction --no-plugins --no-scripts
-          npm i
+          npm install
           php artisan key:generate
           php artisan config:cache
 
@@ -60,11 +57,29 @@ jobs:
           docker-compose up -d
           docker ps
 
+      - name: Check Docker services status
+        run: |
+          docker-compose ps
+          docker-compose logs app
+          docker-compose logs webserver
+          docker-compose logs db
+          docker-compose logs phpmyadmin
+
+      - name: Debug Docker setup
+        run: |
+          docker-compose exec app ls -la
+          docker-compose exec app ls -la storage
+          docker-compose exec app ls -la bootstrap/cache
+          docker-compose exec app cat .env
+          docker-compose exec app cat nginx/conf.d/laravel.conf
+
       - name: Run tests inside Docker container
         run: |
-          sudo docker-compose exec app php artisan test
+          sleep 40
+          docker-compose exec app php artisan test
 
       - name: Collect logs
+        if: failure()
         run: |
           docker-compose logs app
           docker-compose logs webserver
