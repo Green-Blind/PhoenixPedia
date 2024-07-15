@@ -57,7 +57,7 @@ jobs:
       - name: Collect logs if tests fail
         if: failure()
         run: |
-          docker-compose logs app
-          docker-compose logs webserver
-          docker-compose logs db
+          docker-compose logs laravel_app
+          docker-compose logs nginx
+          docker-compose logs mariadb
           docker-compose logs phpmyadmin
