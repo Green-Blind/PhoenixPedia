@@ -22,9 +22,9 @@ jobs:
 
       - name : Update/Upgrade
         run: |
-          apt-get update
-          apt-get install -y
-          apt-get upgrade -y
+          sudo apt-get update
+          sudo apt-get install -y
+          sudo apt-get upgrade -y
 
       - name : Copy environment files
         run: |
