@@ -24,13 +24,9 @@ jobs:
         run: |
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
-          sudo chown -R www-data:www-data .
           sudo chmod -R 777 .
           pwd
-          ls -l
-          ls -a
-          ls -a ./nginx/conf.d
-          cat ./nginx/conf.d/laravel.conf
+          ls -al
           composer install --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
           php artisan key:generate
           php artisan config:cache
@@ -47,6 +43,9 @@ jobs:
 
       - name: Set up Docker Compose
         run: |
+          php artisan clear-compiled
+          composer dump-autoload
+          php artisan optimize
           docker-compose up -d
           sleep 40
           docker-compose exec -T app php artisan migrate --force
