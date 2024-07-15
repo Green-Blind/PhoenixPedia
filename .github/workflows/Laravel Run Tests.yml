@@ -24,6 +24,8 @@ jobs:
         run: |
           cp .env.example .env
           cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          composer install --no-interaction --no-plugins --no-scripts
           pwd
           ls -a
           php artisan key:generate
