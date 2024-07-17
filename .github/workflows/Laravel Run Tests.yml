@@ -74,7 +74,7 @@ jobs:
       - name: Debug Ubuntu
         run: |
           pwd
-          ls -la var/www
+          ls -la
 
       - name: Debug Docker setup
         run: |
