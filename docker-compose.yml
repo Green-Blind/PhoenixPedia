@@ -1,5 +1,10 @@
+version: '3.8'
+
 services:
     app:
+        environment:
+            APP_ENV: development
+            NODE_ENV: development
         build:
             context: .
             dockerfile: Dockerfile
