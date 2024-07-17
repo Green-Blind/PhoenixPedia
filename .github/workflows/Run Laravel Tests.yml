@@ -1,0 +1,90 @@
+name: Run Laravel Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  run-laravel-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update and Install Dependencies
+        run: |
+          sudo apt-get update && sudo apt-get upgrade -y
+          sudo apt-get install -y unzip netcat-openbsd
+
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: bcmath, bz2, calendar, ctype, curl, exif, ffi, fileinfo, ftp, gettext, iconv, intl, mbstring, opcache, pdo, pdo_mysql, phar, posix, readline, shmop, sockets, sysvmsg, sysvsem, sysvshm, tokenizer
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Retrieve Current User
+        run: |
+          CURRENT_USER=$(whoami)
+          echo "Current user is $CURRENT_USER"
+          sudo usermod -aG www-data $CURRENT_USER
+
+      - name: Set Unix Permissions
+        run: |
+          sudo chown -R www-data:www-data ./
+          sudo find ./ -type d -exec chmod 775 {} \;
+          sudo find ./ -type f -exec chmod 664 {} \;
+          sudo chmod g+s ./
+
+      - name: Copy Environment Files
+        run: |
+          cp .env.example .env
+          cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+
+      - name: Install PHP/Laravel and Node.js Dependencies
+        run: |
+          composer install --no-interaction --no-plugins --no-scripts
+          npm install
+          php artisan key:generate
+
+      - name: Start Docker Compose Services
+        run: |
+          docker-compose up -d
+
+      - name: Check Docker Services Status
+        run: docker-compose ps
+
+      - name: Wait for Site to be Ready
+        run: |
+          SITE_URL="http://localhost:8081"
+          MAX_TRIES=10
+          TRIES=0
+          while [ $TRIES -lt $MAX_TRIES ]; do
+            RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null $SITE_URL)
+            if [ $RESPONSE -eq 200 ]; then
+              echo "Site is up!"
+              break
+            fi
+            echo "Waiting for the site to be up... ($TRIES/$MAX_TRIES)"
+            TRIES=$((TRIES + 1))
+            sleep 15
+          done
+          if [ $TRIES -eq $MAX_TRIES ]; then
+            echo "Site did not become ready in time."
+            exit 1
+          fi
+
+      - name: Run Laravel Tests
+        run: docker-compose exec -T app php artisan test
+
+      - name: Collect Docker Logs on Failure
+        if: failure()
+        run: docker-compose logs --no-log-prefix app webserver db phpmyadmin
