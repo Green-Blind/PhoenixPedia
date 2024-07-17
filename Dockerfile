@@ -5,38 +5,15 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     nodejs \
-    netcat-openbsd
-
-# Install required PHP extensions
-RUN docker-php-ext-install \
-    bcmath \
-    bz2 \
-    calendar \
-    ctype \
-    curl \
-    exif \
-    ffi \
-    fileinfo \
-    ftp \
-    gettext \
-    iconv \
-    intl \
-    mbstring \
-    opcache \
-    pdo \
-    pdo_mysql \
-    phar \
-    posix \
-    readline \
-    shmop \
-    sockets \
-    sysvmsg \
-    sysvsem \
-    sysvshm \
-    tokenizer \
+    netcat-openbsd \
+    libcurl4-openssl-dev \
+    libffi-dev
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install required PHP extensions
+RUN docker-php-ext-install pdo_mysql
 
 # Install Node.js and npm
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
