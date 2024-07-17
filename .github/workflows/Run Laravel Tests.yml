@@ -40,8 +40,7 @@ jobs:
       - name: Set Unix Permissions
         run: |
           sudo chown -R www-data:www-data ./
-          sudo find ./ -type d -exec chmod 775 {} \;
-          sudo find ./ -type f -exec chmod 664 {} \;
+          sudo chmod -R 775 ./
           sudo chmod g+s ./
 
       - name: Copy Environment Files
