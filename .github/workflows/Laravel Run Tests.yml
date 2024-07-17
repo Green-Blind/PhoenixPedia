@@ -52,7 +52,6 @@ jobs:
             sysvsem
             sysvshm
             tokenizer
-        run: php -v
 
       - name: Get current user
         run: |
