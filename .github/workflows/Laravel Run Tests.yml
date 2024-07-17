@@ -3,7 +3,7 @@ name: Laravel Run Tests
 on:
   push:
     branches:
-      - mainS
+      - main
   pull_request:
     types: [opened, reopened, synchronize]
 
