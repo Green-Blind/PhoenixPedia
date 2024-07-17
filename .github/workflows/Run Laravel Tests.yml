@@ -3,7 +3,7 @@ name: Run Laravel Tests
 on:
   push:
     branches:
-      - main
+      - '*'
   pull_request:
     types: [opened, reopened, synchronize]
 
@@ -30,12 +30,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20'
-
-      - name: Set Unix Permissions
-        run: |
-          sudo chown -R www-data:www-data ./
-          sudo chmod -R 777 ./
-          sudo chmod g+s ./
 
       - name: Copy Environment Files
         run: |
