@@ -39,9 +39,9 @@ jobs:
 
       - name: Set Unix Permissions
         run: |
-          sudo chown -R www-data:www-data /home/runner/work/PhoenixPedia/PhoenixPedia
-          sudo chmod -R 775 /home/runner/work/PhoenixPedia/PhoenixPedia
-          sudo chmod g+s /home/runner/work/PhoenixPedia/PhoenixPedia
+          sudo chown -R www-data:www-data ./
+          sudo chmod -R 775 ./
+          sudo chmod g+s ./
 
       - name: Copy Environment Files
         run: |
@@ -50,8 +50,8 @@ jobs:
 
       - name: Install PHP/Laravel and Node.js Dependencies
         run: |
-          composer install --no-interaction --no-plugins --no-scripts
-          npm install
+          sudo composer install --no-interaction --no-plugins --no-scripts
+          sudo npm install
           php artisan key:generate
 
       - name: Start Docker Compose Services
