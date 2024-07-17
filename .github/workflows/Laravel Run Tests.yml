@@ -36,9 +36,9 @@ jobs:
 
       - name: Change unix permissions
         run: |
-          sudo chown -R www-data:www-data /var/www
-          sudo chmod -R 777 /var/www
-          sudo chmod g+s /var/www
+          sudo chown -R www-data:www-data ./
+          sudo chmod -R 777 ./
+          sudo chmod g+s ./
 
       - name: Copy environment files
         run: |
@@ -78,16 +78,16 @@ jobs:
 
       - name: Debug Docker setup
         run: |
-          docker-compose exec app ls -la
-          docker-compose exec app ls -la storage
-          docker-compose exec app ls -la bootstrap/cache
-          docker-compose exec app cat .env
-          docker-compose exec app cat nginx/conf.d/laravel.conf
+          docker-compose exec -T app ls -la
+          docker-compose exec -T app ls -la storage
+          docker-compose exec -T app ls -la bootstrap/cache
+          docker-compose exec -T app cat .env
+          docker-compose exec -T app cat nginx/conf.d/laravel.conf
 
       - name: Run tests inside Docker container
         run: |
           sleep 40
-          docker-compose exec app php artisan test
+          docker-compose exec -T app php artisan test
 
       - name: Collect logs
         if: failure()
