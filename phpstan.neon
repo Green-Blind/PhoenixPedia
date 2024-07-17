@@ -11,4 +11,3 @@ parameters:
     ignoreErrors:
     excludePaths:
         - routes/console.php
-        - tests/Feature/ExampleTest.php
