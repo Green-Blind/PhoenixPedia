@@ -33,19 +33,19 @@ jobs:
 
       - name: Set Unix Permissions
         run: |
-          sudo chown -R $USER:www-data ./
-          sudo chmod -R 775 ./
+          sudo chown -R www-data:www-data ./
+          sudo chmod -R 777 ./
           sudo chmod g+s ./
 
       - name: Copy Environment Files
         run: |
-          sudo cp .env.example .env
-          sudo cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+          cp .env.example .env
+          cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
 
       - name: Install PHP/Laravel and Node.js Dependencies
         run: |
-          sudo composer install --no-interaction --no-plugins --no-scripts
-          sudo npm install
+          composer install --no-interaction --no-plugins --no-scripts
+          npm install
           php artisan key:generate
 
       - name: Start Docker Compose Services
