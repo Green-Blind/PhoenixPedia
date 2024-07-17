@@ -31,15 +31,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Retrieve Current User
-        run: |
-          CURRENT_USER=$(whoami)
-          echo "Current user is $CURRENT_USER"
-          sudo usermod -aG www-data $CURRENT_USER
-
       - name: Set Unix Permissions
         run: |
-          sudo chown -R www-data:www-data ./
+          sudo chown -R $USER:www-data ./
           sudo chmod -R 775 ./
           sudo chmod g+s ./
 
