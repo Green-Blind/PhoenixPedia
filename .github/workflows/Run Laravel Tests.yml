@@ -45,8 +45,8 @@ jobs:
 
       - name: Copy Environment Files
         run: |
-          cp .env.example .env
-          cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
+          sudo cp .env.example .env
+          sudo cp nginx/conf.d/laravel.conf.example nginx/conf.d/laravel.conf
 
       - name: Install PHP/Laravel and Node.js Dependencies
         run: |
