@@ -39,9 +39,9 @@ jobs:
 
       - name: Set Unix Permissions
         run: |
-          sudo chown -R www-data:www-data ./
-          sudo chmod -R 775 ./
-          sudo chmod g+s ./
+          sudo chown -R www-data:www-data /home/runner/work/PhoenixPedia/PhoenixPedia
+          sudo chmod -R 775 /home/runner/work/PhoenixPedia/PhoenixPedia
+          sudo chmod g+s /home/runner/work/PhoenixPedia/PhoenixPedia
 
       - name: Copy Environment Files
         run: |
