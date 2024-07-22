@@ -17,27 +17,23 @@ jobs:
       - name: Login to Docker Hub
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Build and push Laravel App image
+      - name: Extract version from composer.json
+        id: extract_version
+        run: |
+          VERSION=$(jq -r '.version' composer.json)
+          echo "::set-output name=VERSION::$VERSION"
+
+      - name: Build and push Laravel App image with latest tag
         env:
           DOCKER_BUILDKIT: 1
         run: |
           docker build -t alpakagb/laravelapp:latest -f Dockerfile.prod .
           docker push alpakagb/laravelapp:latest
 
-      - name: Push pre-built Nginx image
+      - name: Build and push Laravel App image with version tag
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
-          docker pull nginx:1.26.0-alpine
-          docker tag nginx:1.26.0-alpine alpakagb/nginx:latest
-          docker push alpakagb/nginx:latest
-
-      - name: Push pre-built PHPMyAdmin image
-        run: |
-          docker pull phpmyadmin/phpmyadmin:latest
-          docker tag phpmyadmin/phpmyadmin:latest alpakagb/phpmyadmin:latest
-          docker push alpakagb/phpmyadmin:latest
-
-      - name: Push pre-built MariaDB image
-        run: |
-          docker pull mariadb:latest
-          docker tag mariadb:latest alpakagb/mariadb:latest
-          docker push alpakagb/mariadb:latest
+          VERSION=${{ steps.extract_version.outputs.VERSION }}
+          docker build -t alpakagb/laravelapp:$VERSION -f Dockerfile .
+          docker push alpakagb/laravelapp:$VERSION

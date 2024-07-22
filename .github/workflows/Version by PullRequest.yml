@@ -1,4 +1,4 @@
-name: PR Version Update + Validation Title
+name: PR Version Update and Validation Workflow
 
 on:
   pull_request:
@@ -8,97 +8,68 @@ jobs:
   validate_pr_title:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Extract PR title
-        id: pr_info
-        run: |
-          echo "::set-output name=title::$(jq -r '.pull_request.title' $GITHUB_EVENT_PATH)"
+      - name: Install jq for JSON Processing
+        run: sudo apt-get install -y jq
 
-      - name: Validate PR title
+      - name: Validate Pull Request Title
+        id: validate_title
         run: |
-          title="${{ steps.pr_info.outputs.title }}"
-          if [[ $title =~ Release ]]; then
-            echo "La Pull Request contient le mot-clé Release. Arrêt du processus."
+          pr_title=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
+          if [[ $pr_title =~ Release ]]; then
+            echo "The Pull Request contains the keyword 'Release'. Stopping process."
             exit 0
-          elif [[ ! $title =~ (Majeur|Mineur|Patch) ]]; then
-            echo "Le titre de la Pull Request ne contient pas les mots-clés Majeur, Mineur ou Patch."
-            echo "Veuillez inclure l'un de ces mots-clés dans le titre de votre Pull Request."
+          elif [[ ! $pr_title =~ (Majeur|Mineur|Patch) ]]; then
+            echo "The Pull Request title does not contain the keywords 'Majeur', 'Mineur', or 'Patch'."
+            echo "Please include one of these keywords in the title of your Pull Request."
             exit 1
           fi
+          echo "::set-output name=title::$pr_title"
 
   update_version:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Fetch all branches
-        run: |
-          git fetch --all
+      - name: Install jq for JSON Processing
+        run: sudo apt-get install -y jq
 
-      - name: Checkout pull request branch
-        run: |
-          git checkout ${{ github.head_ref }}
+      - name: Fetch All Branches
+        run: git fetch --all
 
-      - name: Debug API Response
-        run: |
-          response=$(curl -s -H "Authorization: token ${{ secrets.MY_SECRET_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed&sort=updated&direction=desc&per_page=100")
-          echo "$response"
-          echo "$response" > response.json
+      - name: Checkout Pull Request Branch
+        run: git checkout ${{ github.head_ref }}
 
-      - name: Extract version from last PR title
+      - name: Extract Version from Last PR Title
         id: extract_version
         run: |
-          set -x # Activer le mode débogage pour afficher les commandes exécutées
-          latest_pr_titles=$(cat response.json | jq -r '.[].title')
-          echo "Latest PR Titles: $latest_pr_titles" # Ajouter un log pour voir les titres des PRs
+          response=$(curl -s -H "Authorization: token ${{ secrets.API_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed&sort=updated&direction=desc&per_page=100")
+          latest_pr_titles=$(echo "$response" | jq -r '.[].title')
           version=""
           while read -r title; do
-            echo "Processing title: $title" # Ajouter un log pour voir chaque titre traité
             version=$(echo "$title" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-            if [[ ! -z "$version" ]]; then
-              break
-            fi
+            [[ ! -z "$version" ]] && break
           done <<< "$latest_pr_titles"
-          if [[ -z "$version" ]]; then
-            version="1.0.0"
-          fi
-          echo "Extracted version: $version"
+          [[ -z "$version" ]] && version="1.0.0"
           echo "::set-output name=version::$version"
 
-      - name: Extract PR title and labels
+      - name: Extract Current PR Title
         id: pr_info
         run: |
-          pr_title=$(jq -r '.pull_request.title' $GITHUB_EVENT_PATH)
+          pr_title=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
           echo "::set-output name=title::$pr_title"
-          pr_labels=$(jq -r '.pull_request.labels[].name' $GITHUB_EVENT_PATH)
-          echo "::set-output name=labels::$pr_labels"
 
-      - name: Update version and PR title
+      - name: Update Version Based on PR Title
+        id: update_version
         run: |
-          # Récupérer le titre de la PR
           title="${{ steps.pr_info.outputs.title }}"
-          echo "$title" > title.txt
-
-          # Récupérer la dernière version de la PR
           version="${{ steps.extract_version.outputs.version }}"
-
-          # Écrire la version dans un fichier de sortie
-          echo "$version" > version.txt
-        continue-on-error: true
-
-      - name: Debug new title values
-        run: |
-          # Lire la version depuis le fichier de sortie
-          version=$(cat version.txt)
-          title=$(cat title.txt)
-
-          # Vérifier si les mots-clés sont présents dans le titre
           if [[ $title == *"Majeur"* ]]; then
               version=$(echo $version | awk -F. '{$1++; $2=0; $3=0} 1' OFS=.)
           elif [[ $title == *"Mineur"* ]]; then
@@ -106,48 +77,30 @@ jobs:
           elif [[ $title == *"Patch"* ]]; then
               version=$(echo $version | awk -F. '{$3++} 1' OFS=.)
           fi
-
-          # Mettre à jour le titre de la PR avec la nouvelle version
           new_title="${version} - ${title}"
+          echo "::set-output name=new_title::$new_title"
+          echo "::set-output name=new_version::$version"
 
-          # Enregistrer la nouvelle valeur de new_title dans un fichier de sortie
-          echo "$new_title" > new_title.txt
-
-      - name: Update PR title
+      - name: Update Pull Request Title
         run: |
-          # Lire la nouvelle valeur de new_title depuis le fichier de sortie
-          new_title=$(cat new_title.txt)
-
-          # Récupérer le numéro de la PR
+          new_title="${{ steps.update_version.outputs.new_title }}"
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-
-          # Mettre à jour le titre de la PR via l'API GitHub
           curl -X PATCH \
-            -H "Authorization: token ${{ secrets.MY_SECRET_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.API_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"title\": \"$new_title\"}" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/${pr_number}"
 
-      - name: Update .env.exemple with new version
+      - name: Update composer.json with New Version
         run: |
-          # Lire la version depuis le fichier de sortie
-          version=$(cat version.txt)
-
-          # Vérifier si le fichier .env.exemple existe dans le répertoire du projet
-          if [ ! -f .env.exemple ]; then
-            touch .env.exemple
+          version="${{ steps.update_version.outputs.new_version }}"
+          if [ ! -f composer.json ]; then
+            echo "composer.json not found!"
+            exit 1
           fi
-
-          # Remplacer ou ajouter la variable APP_VERSION dans le fichier .env.exemple
-          if grep -q "^APP_VERSION=" .env.exemple; then
-            sed -i "s/^APP_VERSION=.*/APP_VERSION=$version/" .env.exemple
-          else
-            echo "APP_VERSION=$version" >> .env.exemple
-          fi
-
-          # Committer et pousser les modifications
+          jq --arg version "$version" '.version = $version' composer.json > tmp.$$.json && mv tmp.$$.json composer.json
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .env.exemple
-          git commit -m "Update APP_VERSION to $version"
+          git add composer.json
+          git commit -m "Update version to $version in composer.json"
           git push origin "HEAD:${{ github.head_ref }}"
