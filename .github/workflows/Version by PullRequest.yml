@@ -90,7 +90,7 @@ jobs:
           new_title="${{ steps.update_version.outputs.new_title }}"
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           curl -X PATCH \
-            -H "Authorization: token ${{ secrets.API_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"title\": \"$new_title\"}" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/${pr_number}"
