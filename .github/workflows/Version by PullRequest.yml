@@ -61,8 +61,11 @@ jobs:
             version=""
             while read -r title; do
               echo "Processing title: $title"
-              version=$(echo "$title" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-              [[ ! -z "$version" ]] && break
+              extracted_version=$(echo "$title" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+              if [[ ! -z "$extracted_version" ]]; then
+                version="$extracted_version"
+                break
+              fi
             done <<< "$latest_pr_titles"
             [[ -z "$version" ]] && version="1.0.0"
           fi
