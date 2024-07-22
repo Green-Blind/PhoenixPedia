@@ -4,15 +4,13 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, reopened, synchronize]
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Login to Docker Hub
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
@@ -21,7 +19,7 @@ jobs:
         id: extract_version
         run: |
           VERSION=$(jq -r '.version' composer.json)
-          echo "::set-output name=VERSION::$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build and push Laravel App image with latest tag
         env:
@@ -34,6 +32,6 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          VERSION=${{ steps.extract_version.outputs.VERSION }}
+          VERSION=${{ env.VERSION }}
           docker build -t alpakagb/laravelapp:$VERSION -f Dockerfile .
           docker push alpakagb/laravelapp:$VERSION

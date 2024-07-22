@@ -26,11 +26,11 @@ jobs:
             echo "Please include one of these keywords in the title of your Pull Request."
             exit 1
           fi
-          echo "::set-output name=title::$pr_title"
+          echo "title=$pr_title" >> $GITHUB_OUTPUT
 
   update_version:
     runs-on: ubuntu-latest
-
+    needs: validate_pr_title
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -43,33 +43,37 @@ jobs:
       - name: Fetch All Branches
         run: git fetch --all
 
+      - name: Checkout Main Branch
+        run: git checkout main
+
+      - name: Get Current Version from composer.json
+        id: get_version
+        run: |
+          if [ ! -f composer.json ]; then
+            echo "composer.json not found!"
+            exit 1
+          fi
+          current_version=$(jq -r '.version' composer.json)
+          if [[ -z "$current_version" || "$current_version" == "null" ]]; then
+            current_version="0.0.0"
+          fi
+          echo "Current version in main branch: $current_version"
+          echo "current_version=$current_version" >> $GITHUB_OUTPUT
+
       - name: Checkout Pull Request Branch
         run: git checkout ${{ github.head_ref }}
-
-      - name: Extract Version from Last PR Title
-        id: extract_version
-        run: |
-          response=$(curl -s -H "Authorization: token ${{ secrets.API_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed&sort=updated&direction=desc&per_page=100")
-          latest_pr_titles=$(echo "$response" | jq -r '.[].title')
-          version=""
-          while read -r title; do
-            version=$(echo "$title" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-            [[ ! -z "$version" ]] && break
-          done <<< "$latest_pr_titles"
-          [[ -z "$version" ]] && version="1.0.0"
-          echo "::set-output name=version::$version"
 
       - name: Extract Current PR Title
         id: pr_info
         run: |
           pr_title=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
-          echo "::set-output name=title::$pr_title"
+          echo "title=$pr_title" >> $GITHUB_OUTPUT
 
       - name: Update Version Based on PR Title
         id: update_version
         run: |
           title="${{ steps.pr_info.outputs.title }}"
-          version="${{ steps.extract_version.outputs.version }}"
+          version="${{ steps.get_version.outputs.current_version }}"
           if [[ $title == *"Majeur"* ]]; then
               version=$(echo $version | awk -F. '{$1++; $2=0; $3=0} 1' OFS=.)
           elif [[ $title == *"Mineur"* ]]; then
@@ -78,15 +82,15 @@ jobs:
               version=$(echo $version | awk -F. '{$3++} 1' OFS=.)
           fi
           new_title="${version} - ${title}"
-          echo "::set-output name=new_title::$new_title"
-          echo "::set-output name=new_version::$version"
+          echo "new_title=$new_title" >> $GITHUB_OUTPUT
+          echo "new_version=$version" >> $GITHUB_OUTPUT
 
       - name: Update Pull Request Title
         run: |
           new_title="${{ steps.update_version.outputs.new_title }}"
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           curl -X PATCH \
-            -H "Authorization: token ${{ secrets.API_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"title\": \"$new_title\"}" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/${pr_number}"
