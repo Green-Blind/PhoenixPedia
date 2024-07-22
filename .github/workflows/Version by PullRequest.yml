@@ -26,11 +26,11 @@ jobs:
             echo "Please include one of these keywords in the title of your Pull Request."
             exit 1
           fi
-          echo "::set-output name=title::$pr_title"
+          echo "title=$pr_title" >> $GITHUB_OUTPUT
 
   update_version:
     runs-on: ubuntu-latest
-
+    needs: validate_pr_title
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
             current_version="0.0.0"
           fi
           echo "Current version in main branch: $current_version"
-          echo "::set-output name=current_version::$current_version"
+          echo "current_version=$current_version" >> $GITHUB_OUTPUT
 
       - name: Checkout Pull Request Branch
         run: git checkout ${{ github.head_ref }}
@@ -67,7 +67,7 @@ jobs:
         id: pr_info
         run: |
           pr_title=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
-          echo "::set-output name=title::$pr_title"
+          echo "title=$pr_title" >> $GITHUB_OUTPUT
 
       - name: Update Version Based on PR Title
         id: update_version
@@ -82,8 +82,8 @@ jobs:
               version=$(echo $version | awk -F. '{$3++} 1' OFS=.)
           fi
           new_title="${version} - ${title}"
-          echo "::set-output name=new_title::$new_title"
-          echo "::set-output name=new_version::$version"
+          echo "new_title=$new_title" >> $GITHUB_OUTPUT
+          echo "new_version=$version" >> $GITHUB_OUTPUT
 
       - name: Update Pull Request Title
         run: |
