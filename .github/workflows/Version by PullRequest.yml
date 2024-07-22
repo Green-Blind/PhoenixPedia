@@ -50,18 +50,24 @@ jobs:
         id: extract_version
         run: |
           response=$(curl -s -H "Authorization: token ${{ secrets.API_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed&sort=updated&direction=desc&per_page=100")
+          echo "API Response: $response"
+
           if [[ -z "$response" || "$response" == "[]" ]]; then
             version="1.0.0"
           else
             latest_pr_titles=$(echo "$response" | jq -r '.[].title')
+            echo "Latest PR Titles: $latest_pr_titles"
+
             version=""
             while read -r title; do
+              echo "Processing title: $title"
               version=$(echo "$title" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
               [[ ! -z "$version" ]] && break
             done <<< "$latest_pr_titles"
             [[ -z "$version" ]] && version="1.0.0"
           fi
 
+          echo "Extracted Version: $version"
           echo "::set-output name=version::$version"
 
       - name: Extract Current PR Title
