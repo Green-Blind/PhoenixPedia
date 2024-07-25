@@ -52,4 +52,23 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+    /**
+     * Give the user a role.
+     */
+    public function giveRole(string $role): void
+    {
+        // we assume that roles are unique and we can find a role by its name
+        $role = Role::where('name', $role)->firstOrFail();
+
+        $this->roles()->attach($role);
+    }
+
+    /**
+     * Check whether the user has a role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
 }

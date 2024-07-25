@@ -15,6 +15,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Reset Git Configurations
+        run: |
+          git config --global --remove-section http || true
+          git config --global --remove-section https || true
+
+
       - name: Update and Install Dependencies
         run: |
           sudo apt-get update && sudo apt-get upgrade -y
@@ -27,16 +33,9 @@ jobs:
           extensions: bcmath, bz2, calendar, ctype, curl, exif, ffi, fileinfo, ftp, gettext, iconv, intl, mbstring, opcache, pdo, pdo_mysql, phar, posix, readline, shmop, sockets, sysvmsg, sysvsem, sysvshm, tokenizer
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Clean Git Cache
-        run: git gc --prune=now
-
-      - name: Configure Git
-        run: |
-          git config --global http.https://github.com/.extraheader ""
 
       - name: Copy Environment Files
         run: |

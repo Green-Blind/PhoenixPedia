@@ -5,6 +5,8 @@
 namespace Tests\Feature\User;
 
 // Importez les classes nécessaires pour notre test.
+use Illuminate\Support\Facades\DB;
+use App\Models\Role;
 use App\Models\User; // Le modèle utilisateur que nous allons tester.
 use Illuminate\Foundation\Testing\RefreshDatabase; // C'est un trait fourni par Laravel qui nous permet de réinitialiser l'état de la base de données après chaque test.
 use Tests\TestCase; // C'est la classe de base pour tous les tests dans Laravel.
@@ -18,6 +20,13 @@ class UserRoleTest extends TestCase
     // Notre méthode de test. Dans Laravel, chaque méthode publique dans une classe de test est une "procédure de test", signifiant qu'elle sera exécutée lorsque nous lançons nos tests.
     public function test_user_can_have_roles()
     {
+        // Création des rôles
+        DB::table('roles')->insert([
+            ['name' => 'admin'],
+            ['name' => 'user'],
+            ['name' => 'moderator'],
+        ]);
+
         // Créez un nouvel utilisateur à l'aide de la factory d'utilisateurs.
         // Les factories sont un moyen de créer des instances de modèles pour les tests.
         $user = User::factory()->create();
